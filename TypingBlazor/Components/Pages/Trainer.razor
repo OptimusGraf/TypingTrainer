@@ -1,0 +1,48 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject ITyping Typing
+@inject IStatisticsInfo statisticsInfo
+<PageTitle>Тренажёр печати</PageTitle>
+
+<div id="container" >
+    <div id="title">Тренажёр печати</div>
+
+    <!-- Текст для набора -->
+    <div id="textToType">
+        @Typing.Text
+    </div>
+
+    <!-- Поле ввода -->
+    <div id="inputField" class="typing-area" spellcheck="false" autocomplete="off" autocorrect="off" tabindex="0" @onkeydown = "OnInput">
+        @((MarkupString)currentText)
+    </div>
+   @*  <input id="inputField" @bind="currentText" @oninput="OnInput" /> *@
+    
+    <!-- Статистика -->
+    <div id="stats">
+        <div>⏱ Время:   <span id="time">@statisticsInfo.Time.Seconds</span> сек</div>
+        <div>⚡ Скорость: <span id="speed">@statisticsInfo.CharacterPerMinute</span> зн/мин</div>
+    </div>
+</div>
+
+@code {
+    private string currentText = "";  
+     
+    private void OnInput(KeyboardEventArgs e)
+    {
+        if (string.IsNullOrEmpty(e.Key) || e.Key.Length != 1)
+            return;
+
+        bool result = Typing.InputChar(e.Key[0]);
+        if(result)
+        {
+            currentText += e.Key[0];
+        }
+        else
+        {
+            
+        }
+      
+    
+    }
+}
