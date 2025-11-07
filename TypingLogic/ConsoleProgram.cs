@@ -75,7 +75,7 @@ class ConsoleProgram
         Console.WriteLine($"Ошибочных символов: {stats.IncorrectChars}");
         Console.WriteLine($"Точность:           {stats.Accuracy * 100:F2}%");
         Console.WriteLine($"Симв/мин:           {stats.CharacterPerMinute:F0}");
-        Console.WriteLine($"Время:              {stats.Time:mm\\:ss\\.fff}");
+        Console.WriteLine($"Время:              {stats.TimeForLastChar:mm\\:ss\\.fff}");
         Console.WriteLine("====================================");
     }
 
