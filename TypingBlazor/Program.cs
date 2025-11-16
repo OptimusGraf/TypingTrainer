@@ -32,7 +32,7 @@ app.Run();
 static void AddLogicServices(WebApplicationBuilder builder)
 {
 
-    builder.Services.AddScoped<ITextProvider, SimpleTextProvider>();
+    builder.Services.AddScoped<ITextProvider, TextFromTXTProvider>();
     builder.Services.AddScoped<IStatisticsInfo, SimpleStatisticsInfo>();
     builder.Services.AddScoped<ICorrectChecker, SimpleCorrectChecker>();
     builder.Services.AddScoped<IMistakeProcessor, AdvancedMistakeProcessor>();

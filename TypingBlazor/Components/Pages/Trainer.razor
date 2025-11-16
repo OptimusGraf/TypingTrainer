@@ -48,14 +48,14 @@
     private int seconds=0;
     protected override void OnInitialized()
     {
-      
+
         AnimatedText = Typing.Text;
         timer = new System.Timers.Timer(100);
         timer.Elapsed += (sender, e) =>
         {
             InvokeAsync(() =>
             {
-               
+
                 StateHasChanged();
             });
         };
@@ -69,12 +69,19 @@
         if (string.IsNullOrEmpty(e.Key) || e.Key.Length != 1)
             return;
 
-        int oldCursor = Typing.Cursor+1;
-        Typing.InputChar(e.Key[0]);
+        int oldCursor = Typing.Cursor < Typing.Text.Length ? Typing.Cursor + 1 : Typing.Cursor;
+        bool correct =  Typing.InputChar(e.Key[0]);
+
+        int lengthOfRedPart = 0;
+        if (correct)
+            lengthOfRedPart  = 0;
+        else
+            lengthOfRedPart = oldCursor - Typing.Cursor;
         currentText += e.Key[0];
 
 
-        AnimateText(oldCursor - Typing.Cursor);
+
+        AnimateText(lengthOfRedPart);
 
     }
     void AnimateText(int lengthOfRedPart)

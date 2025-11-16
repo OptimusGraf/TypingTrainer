@@ -5,10 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace TypingTrainer.Logic;
 
-public interface ITextProvider
-{
-    string GetText();
-}
+
 
 public interface ICorrectChecker
 {
@@ -22,6 +19,8 @@ public interface ITyping
     bool InputChar(char c);
     IStatisticsInfo StatisticsProvider { get; }
     ITimerProvider Timer { get; }
+    ITextProvider TextProvider { get; }
+    bool IsFinished { get; }
 
 }
 public interface IMistakeProcessor
@@ -133,14 +132,7 @@ public class AdvancedMistakeProcessor : IMistakeProcessor
         }
     }
 }
-public class SimpleTextProvider : ITextProvider
-{
-    string text = "Это простой текст. Он состоит из четырёх предложений. Он нужен для тестирования ввода. Программа должна читать его целиком.";
-    public string GetText()
-    {
-        return text;
-    }
-}
+
 
 public class SimpleCorrectChecker : ICorrectChecker
 {
@@ -165,46 +157,69 @@ public class Typing : ITyping
     private readonly ICorrectChecker correctChecker;
 
     public ITextProvider textProvider;
+    public ITextProvider TextProvider { get; }
     IMistakeProcessor mistakeProcessor;
-    int cursorPosition = 0;
+  
+ 
+
+    bool isFinished = false;
+    public bool IsFinished
+    {
+        get => isFinished;
+    }
     string text;
-
-
     public string Text
     {
         get => text;
     }
 
-
+    int cursorPosition = 0;
     public int Cursor
     {
         get => cursorPosition;
     }
     public Typing(ITextProvider textProvider, ICorrectChecker correctChecker, IMistakeProcessor mistakeProcessor, IStatisticsInfo statisticsProvider, ITimerProvider timer)
     {
-        this.textProvider = textProvider;
+
         this.correctChecker = correctChecker;
         this.mistakeProcessor = mistakeProcessor;
-        text = textProvider.GetText();
+        this.textProvider = textProvider;
         this.statisticsProvider = statisticsProvider;
-        Timer = timer;
+        this.Timer = timer;
+
+        text = textProvider.GetText();
     }
 
 
     public bool InputChar(char c)
     {
+        if (Text == null)
+        {
+            text = textProvider.GetText();
+        }
+
         if (Timer.Time == TimeSpan.Zero)
         {
             Timer.Start();
         }
+       
 
         bool isCorrect = correctChecker.IsCorrect(text, cursorPosition, c);
         mistakeProcessor.ProcessMistake(ref cursorPosition, isCorrect, text);
         statisticsProvider.RecordInput(isCorrect, Timer.Time);
-        if (cursorPosition >= text.Length)
+        if (cursorPosition == text.Length)
         {
-            Timer.Stop();
+            text = textProvider.GetText();
+            if (text == null)
+            {
+                isFinished = true;
+                Timer.Stop();
+            }
+            cursorPosition = 0;
+            return true;
+
         }
+
         return isCorrect;
     }
 }

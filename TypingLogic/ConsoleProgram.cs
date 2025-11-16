@@ -7,7 +7,7 @@ class ConsoleProgram
     public static ServiceProvider ConfigureServices()
     {
         var services = new ServiceCollection();
-        services.AddSingleton<ITextProvider, SimpleTextProvider>();
+        services.AddSingleton<ITextProvider, TextFromTXTProvider>();
         services.AddSingleton<IStatisticsInfo, SimpleStatisticsInfo>();
         services.AddSingleton<ICorrectChecker, SimpleCorrectChecker>();
         services.AddSingleton<IMistakeProcessor, AdvancedMistakeProcessor>();
