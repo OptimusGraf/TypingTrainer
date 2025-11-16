@@ -1,0 +1,54 @@
+﻿
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+<PageTitle>Home</PageTitle>
+
+ <div id="container">
+
+        <section id="user-block">
+            <h1>Добро пожаловать!</h1>
+
+     
+            <div id="last-results">
+                <h2>Ваш предыдущий результат</h2>
+
+                <div class="result-line">
+                    <span>⚡ Скорость:</span>
+                    <strong id="lastSpeed">—</strong>
+                </div>
+
+                <div class="result-line">
+                    <span>🎯 Точность:</span>
+                    <strong id="lastAccuracy">—</strong>
+                </div>
+            </div>
+
+            <div id="settings">
+                <h2>Настройки</h2>
+
+                <div class="setting">
+                    <label for="language">Язык:</label>
+                    <select id="language">
+                        <option value="ru">Русский</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+
+                <div class="setting">
+                    <label for="difficulty">Сложность:</label>
+                    <select id="difficulty">
+                        <option value="easy">Легко</option>
+                        <option value="medium">Средне</option>
+                        <option value="hard">Сложно</option>
+                    </select>
+                </div>
+            </div>
+
+        <button class="myButton" @onclick="OnStartTrainingCallback">Начать тренировку</button>
+        </section>
+</div>
+@code
+{
+   [Parameter]
+    public EventCallback OnStartTrainingCallback { get; set; }
+}

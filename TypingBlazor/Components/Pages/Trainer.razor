@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿
 @rendermode InteractiveServer
 @inject ITyping Typing
 @inject IStatisticsInfo statisticsInfo
@@ -38,9 +38,14 @@
         <div>⚡ Скорость: <span id="speed">@statisticsInfo.CharacterPerMinute</span> зн/мин</div>
         <div>⚡ Точность: <span id="accuracy">@($"{statisticsInfo.Accuracy * 100:F0}")</span> %</div>
     </div>
+    <button class="myButton" @onclick="OnStopTrainingCallback">Меню</button>
+    
 </div>
 
 @code {
+    
+    [Parameter]
+    public EventCallback OnStopTrainingCallback { get; set; }
 
     private string AnimatedText = "";
     private string currentText = "";

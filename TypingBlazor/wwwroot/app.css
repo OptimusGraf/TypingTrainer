@@ -92,3 +92,60 @@ body {
     min-width: 120px;
 }
 
+.myButton {
+    display: inline-block;
+    padding: 20px 60px; /* большая по вертикали и горизонтали */
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff; /* белый текст */
+    text-align: center;
+    text-transform: uppercase;
+    border: none;
+    outline: none;
+    border-radius: 50px; /* полностью овал */
+    background: linear-gradient(135deg, #ff4d4f, #d9363e); /* красивый градиент */
+    box-shadow: 0 6px 20px rgba(255, 77, 79, 0.5), 0 0 10px rgba(255, 77, 79, 0.2);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    z-index: 1000;
+}
+
+    /* Hover — чуть светлее и приподнимается */
+    .bigOvalButton:hover {
+        background: linear-gradient(135deg, #ff5c5f, #e04b50);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 90, 95, 0.6), 0 0 12px rgba(255, 77, 79, 0.3);
+    }
+
+    /* Active — при нажатии слегка опускается */
+    .bigOvalButton:active {
+        background: linear-gradient(135deg, #e04b50, #b72d32);
+        transform: translateY(1px);
+        box-shadow: 0 4px 12px rgba(200, 50, 50, 0.4);
+    }
+
+    /* Фокус — для клавиатуры */
+    .bigOvalButton:focus {
+        outline: 3px solid rgba(255, 77, 79, 0.6);
+        outline-offset: 3px;
+    }
+
+    /* Hover — слегка светлее и поднимается */
+    .myButton:hover {
+        background: linear-gradient(135deg, #ff5c5f, #e04b50);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(255, 90, 95, 0.5), 0 0 12px rgba(255, 77, 79, 0.3);
+    }
+
+    /* Active — при нажатии слегка опускается */
+    .myButton:active {
+        background: linear-gradient(135deg, #e04b50, #b72d32);
+        transform: translateY(1px);
+        box-shadow: 0 4px 12px rgba(200, 50, 50, 0.3);
+    }
+
+    /* Фокус — для клавиатуры */
+    .myButton:focus {
+        outline: 2px solid
+    }
