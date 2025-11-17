@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-AddLogicServices(builder);
+builder.Services.AddLogicServices();
 
 var app = builder.Build();
 
@@ -29,13 +29,3 @@ app.MapRazorComponents<App>()
 
 app.Run();
 
-static void AddLogicServices(WebApplicationBuilder builder)
-{
-
-    builder.Services.AddScoped<ITextProvider, TextFromTXTProvider>();
-    builder.Services.AddScoped<IStatisticsInfo, SimpleStatisticsInfo>();
-    builder.Services.AddScoped<ICorrectChecker, SimpleCorrectChecker>();
-    builder.Services.AddScoped<IMistakeProcessor, AdvancedMistakeProcessor>();
-    builder.Services.AddScoped<ITimerProvider, SimpleTimer>();
-    builder.Services.AddScoped<ITyping, Typing>();
-}

@@ -1,7 +1,6 @@
 ﻿
 @rendermode InteractiveServer
-@inject ITyping Typing
-@inject IStatisticsInfo statisticsInfo
+
 
 @{
     // AnimatedText = Typing.Text;
@@ -24,17 +23,22 @@
    
     <div id="stats">
         <div>⏱ Время:   <span id="time">@Typing.Timer.Time.Seconds</span> сек</div>
-        <div>⚡ Скорость: <span id="speed">@statisticsInfo.CharacterPerMinute</span> зн/мин</div>
-        <div>⚡ Точность: <span id="accuracy">@($"{statisticsInfo.Accuracy * 100:F0}")</span> %</div>
+        <div>⚡ Скорость: <span id="speed">@StatisticsInfo.CharacterPerMinute</span> зн/мин</div>
+        <div>⚡ Точность: <span id="accuracy">@($"{StatisticsInfo.Accuracy * 100:F0}")</span> %</div>
     </div>
     <button  @onclick="OnStopTrainingCallback">Меню</button>
     
 </div>
 
 @code {
-    
+
     [Parameter]
     public EventCallback OnStopTrainingCallback { get; set; }
+
+    [Parameter]
+    public ITyping Typing { get; set; } 
+
+    public IStatisticsInfo StatisticsInfo;
 
     private string AnimatedText = "";
     private string currentText = "";
@@ -42,7 +46,7 @@
     private int seconds=0;
     protected override void OnInitialized()
     {
-
+        StatisticsInfo = Typing.StatisticsProvider;
         AnimatedText = Typing.Text;
         timer = new System.Timers.Timer(100);
         timer.Elapsed += (sender, e) =>
@@ -80,6 +84,7 @@
     }
     void AnimateText(int lengthOfRedPart)
     {
+        //выбрасывается искл, когда неосталось текстов
         AnimatedText
             = $"<span class=\"correct\">{Typing.Text.Substring(0, Typing.Cursor)}</span>|<span class = \"incorrect\">{Typing.Text.Substring(Typing.Cursor, lengthOfRedPart)}</span>{Typing.Text.Substring(Typing.Cursor + lengthOfRedPart)}";
     }

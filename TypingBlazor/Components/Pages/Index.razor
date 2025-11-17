@@ -1,16 +1,34 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@inject ITypingFactory typingFactory
 
 @if (!IsTrainingStarted)
 {
-    <StartView OnStartTrainingCallback="() => IsTrainingStarted = true" />
+    <StartView OnStartTrainingCallback="@StartTraining" />
     
 }
 else
 {
-    <Trainer OnStopTrainingCallback="() => IsTrainingStarted=false" />
+    <Trainer Typing="@typing" OnStopTrainingCallback="() => IsTrainingStarted=false" />
 }
 
-@code {
+@code 
+{
     bool IsTrainingStarted = false;
+
+
+
+    [Inject]
+    IServiceProvider serviceProvider { get; set; }
+    ITyping typing;
+
+    void StartTraining(Config config)
+    {
+        typing=  typingFactory.CreateTyping(config);
+
+        IsTrainingStarted = true;
+   
+    }
+
+   
 }

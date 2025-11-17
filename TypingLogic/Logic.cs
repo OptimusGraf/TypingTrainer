@@ -1,11 +1,26 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 namespace TypingTrainer.Logic;
 
-
+public static class LogicService
+{
+    public static IServiceCollection AddLogicServices(this IServiceCollection serviceCollection)
+    {
+        //подумать когда скопед, транизет и тдж
+        serviceCollection.AddTransient<TextFromTXTProvider>().
+        AddTransient<IStatisticsInfo, SimpleStatisticsInfo>().
+        AddTransient<ICorrectChecker, SimpleCorrectChecker>().
+        AddTransient<AdvancedMistakeProcessor>()
+        .AddTransient<SimpleMistakeProcessor>()
+        .AddTransient<ITimerProvider, SimpleTimer>()
+        .AddScoped<ITypingFactory, TypingFactory>();
+        return serviceCollection;
+    }
+}
 
 public interface ICorrectChecker
 {
@@ -84,8 +99,8 @@ public class SimpleStatisticsInfo : IStatisticsInfo
     public int CharacterPerMinute
     {
         get
-        { // исправить ошибку!!
-            if (CorrectChars == 0)
+        {
+            if (TimeForLastChar.Seconds == 0)
                 return 0;
             return (int)(CorrectChars / ((double)TimeForLastChar.Seconds / 60));
         }
@@ -159,8 +174,8 @@ public class Typing : ITyping
     public ITextProvider textProvider;
     public ITextProvider TextProvider { get; }
     IMistakeProcessor mistakeProcessor;
-  
- 
+
+
 
     bool isFinished = false;
     public bool IsFinished
@@ -202,7 +217,7 @@ public class Typing : ITyping
         {
             Timer.Start();
         }
-       
+
 
         bool isCorrect = correctChecker.IsCorrect(text, cursorPosition, c);
         mistakeProcessor.ProcessMistake(ref cursorPosition, isCorrect, text);
