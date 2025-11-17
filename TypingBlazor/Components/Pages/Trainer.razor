@@ -8,37 +8,26 @@
 }
 <PageTitle>Тренажёр печати</PageTitle>
 
-<style>
 
-    .correct {
-        color: #00ff00; /* Зелёный */
-    }
-
-    .incorrect {
-        color: #ff5555; /* Красный */
-    }
-</style>
 
 <div id="container">
     <div id="title">Тренажёр печати</div>
 
-    <!-- Текст для набора -->
     <div id="textToType">
         @((MarkupString)AnimatedText)
     </div>
 
-    <!-- Поле ввода -->
     <div id="inputField" class="typing-area" spellcheck="false" autocomplete="off" autocorrect="off" tabindex="0" @onkeydown="OnInput">
         @((MarkupString)currentText)
     </div>
 
-    <!-- Статистика -->
+   
     <div id="stats">
         <div>⏱ Время:   <span id="time">@Typing.Timer.Time.Seconds</span> сек</div>
         <div>⚡ Скорость: <span id="speed">@statisticsInfo.CharacterPerMinute</span> зн/мин</div>
         <div>⚡ Точность: <span id="accuracy">@($"{statisticsInfo.Accuracy * 100:F0}")</span> %</div>
     </div>
-    <button class="myButton" @onclick="OnStopTrainingCallback">Меню</button>
+    <button  @onclick="OnStopTrainingCallback">Меню</button>
     
 </div>
 

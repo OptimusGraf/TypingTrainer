@@ -1,8 +1,6 @@
 ﻿@page "/"
 @rendermode InteractiveServer
-<button class="myButton">
-    Начать тренировку
-</button>
+
 @if (!IsTrainingStarted)
 {
     <StartView OnStartTrainingCallback="() => IsTrainingStarted = true" />

@@ -10,4 +10,8 @@
     <ProjectReference Include="..\TypingLogic\TypingLogic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\bootstrap\" />
+  </ItemGroup>
+
 </Project>
