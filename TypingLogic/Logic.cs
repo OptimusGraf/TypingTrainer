@@ -195,7 +195,6 @@ public class Typing : ITyping
     }
     public Typing(ITextProvider textProvider, ICorrectChecker correctChecker, IMistakeProcessor mistakeProcessor, IStatisticsInfo statisticsProvider, ITimerProvider timer)
     {
-
         this.correctChecker = correctChecker;
         this.mistakeProcessor = mistakeProcessor;
         this.textProvider = textProvider;
@@ -218,10 +217,11 @@ public class Typing : ITyping
             Timer.Start();
         }
 
-
         bool isCorrect = correctChecker.IsCorrect(text, cursorPosition, c);
-        mistakeProcessor.ProcessMistake(ref cursorPosition, isCorrect, text);
+
+        mistakeProcessor.ProcessMistake(ref cursorPosition, isCorrect, text); 
         statisticsProvider.RecordInput(isCorrect, Timer.Time);
+
         if (cursorPosition == text.Length)
         {
             text = textProvider.GetText();

@@ -1,0 +1,59 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject ITypingFactory typingFactory
+
+
+@switch(CurrentState)
+{
+    case TrainerState.NotStarted:
+        <StartView OnStartTrainingCallback="@OnStartTraining" />
+        break;
+    case TrainerState.InProgress:
+        <Trainer Typing="@typing" OnStopTrainingCallback="@OnStopTraining" OnFinishedCallback="@OnTrainingFinished" />
+        break;
+    case TrainerState.Finished:
+        <Final OnReturnMenuCallback="@OnReturnToMenu" Statistics="@typing.StatisticsProvider" />
+        break;
+}
+
+
+
+@code
+{
+
+    TrainerState CurrentState = TrainerState.NotStarted;
+
+    [Inject]
+    IServiceProvider serviceProvider { get; set; }
+    ITyping? typing;
+
+    void OnStartTraining(Config config)
+    {   
+        typing = typingFactory.CreateTyping(config);
+        CurrentState = TrainerState.InProgress;
+
+    }
+    void OnStopTraining()
+    {
+        CurrentState = TrainerState.NotStarted;
+    
+    }
+    void OnTrainingFinished()
+    {
+        CurrentState = TrainerState.Finished;
+
+    }   
+    void OnReturnToMenu()
+    {
+        typing = null;
+        CurrentState = TrainerState.NotStarted;
+    }
+    public enum TrainerState
+    {
+        NotStarted,
+        InProgress,
+        Finished
+
+    }
+
+}

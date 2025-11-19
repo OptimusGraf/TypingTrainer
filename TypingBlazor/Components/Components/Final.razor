@@ -1,0 +1,57 @@
+﻿
+<section id="result-screen" aria-labelledby="result-title" role="region">
+
+        <h1 id="result-title">Результаты тренировки</h1>
+        <p class="result-subtitle">Отличная работа — вот как вы справились в этой сессии.</p>
+  
+
+    <div id="result-summary" aria-live="polite">
+        <!-- Карточки со статистикой -->
+        <div class="stats-grid" role="list">
+            <div class="stat-card" role="listitem" aria-label="Время">
+                <div class="stat-label">⏱ Время</div>
+                <div id="time" class="stat-value">@Statistics.TimeForLastChar.ToString(@"mm\:ss")</div>
+            </div>
+
+            <div class="stat-card" role="listitem" aria-label="Общее число символов">
+                <div class="stat-label">⌨️ Всего символов</div>
+                <div id="totalChars" class="stat-value">@Statistics.TotalChars</div>
+            </div>
+
+            <div class="stat-card" role="listitem" aria-label="Точность">
+                <div class="stat-label">🎯 Точность</div>
+                <div id="accuracyPercent" class="stat-value">@(Statistics.Accuracy*100)%</div>
+            </div>
+
+            <div class="stat-card" role="listitem" aria-label="Скорость">
+                <div class="stat-label">⚡ Скорость</div>
+                <div id="cpm" class="stat-value">@Statistics.CharacterPerMinute зн/мин</div>
+            </div>
+        </div>
+
+        <!-- Дополнительные данные (опционально) -->
+        <div class="extras">
+            <div class="extra-line">
+                <span class="extra-label">Ошибки:</span>
+                <strong id="mistakes">@Statistics.IncorrectChars</strong>
+            </div>
+            <div class="extra-line">
+                <span class="extra-label">Правильных символов:</span>
+                <strong id="correctChars">@Statistics.CorrectChars</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Действия пользователя -->
+    <nav class="result-actions" aria-label="Действия после тренировки">
+        <button type="button" class="btn-ghost" id="homeBtn" @onclick="OnReturnMenuCallback">На главную</button>
+    </nav>
+</section>
+
+@code
+{
+    [Parameter]
+    public EventCallback OnReturnMenuCallback { get; set; }
+    [Parameter]
+    public IStatisticsInfo Statistics { get; set; }
+}
