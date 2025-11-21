@@ -28,8 +28,8 @@ public class TypingFactory : ITypingFactory
         };
         IMistakeProcessor mistakeProcessor = config.Difficulty   switch
         {
-            "easy" => ServiceProvider.GetRequiredService<SimpleMistakeProcessor>(),
-            "hard" => ServiceProvider.GetRequiredService<AdvancedMistakeProcessor>(),
+            "easy" =>  new SimpleMistakeProcessor(),
+            "hard" =>new AdvancedMistakeProcessor(),
             _ => throw new NotImplementedException(),
         };
 

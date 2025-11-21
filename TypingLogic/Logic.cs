@@ -11,24 +11,16 @@ public static class LogicService
     public static IServiceCollection AddLogicServices(this IServiceCollection serviceCollection)
     {
         //подумать когда скопед, транизет и тдж
-        serviceCollection.AddTransient<TextFromTXTProvider>().
-        AddTransient<IStatisticsInfo, SimpleStatisticsInfo>().
-        AddTransient<ICorrectChecker, SimpleCorrectChecker>().
-        AddTransient<AdvancedMistakeProcessor>()
-        .AddTransient<SimpleMistakeProcessor>()
+        serviceCollection.AddTransient<TextFromTXTProvider>()
+        .AddTransient<IStatisticsInfo, SimpleStatisticsInfo>()
+        .AddTransient<ICorrectChecker, SimpleCorrectChecker>()
         .AddTransient<ITimerProvider, SimpleTimer>()
         .AddScoped<ITypingFactory, TypingFactory>();
         return serviceCollection;
     }
 }
-
-public interface ICorrectChecker
-{
-    bool IsCorrect(string text, int cursor, char c);
-}
 public interface ITyping
 {
-
     string Text { get; }
     int Cursor { get; }
     bool InputChar(char c);
@@ -37,6 +29,10 @@ public interface ITyping
     ITextProvider TextProvider { get; }
     bool IsFinished { get; }
 
+}
+public interface ICorrectChecker
+{
+    bool IsCorrect(string text, int cursor, char c);
 }
 public interface IMistakeProcessor
 {
@@ -58,7 +54,6 @@ public class SimpleTimer : ITimerProvider
     {
 
     }
-
     public void Start()
     {
         startTime = DateTime.Now;
@@ -68,8 +63,6 @@ public class SimpleTimer : ITimerProvider
         endTime = DateTime.Now;
 
     }
-
-
 }
 public interface IStatisticsInfo
 {
@@ -171,11 +164,10 @@ public class Typing : ITyping
     }
     private readonly ICorrectChecker correctChecker;
 
-    public ITextProvider textProvider;
+    private ITextProvider textProvider;
     public ITextProvider TextProvider { get; }
-    IMistakeProcessor mistakeProcessor;
 
-
+    private IMistakeProcessor mistakeProcessor;
 
     bool isFinished = false;
     public bool IsFinished
@@ -203,7 +195,6 @@ public class Typing : ITyping
 
         text = textProvider.GetText();
     }
-
 
     public bool InputChar(char c)
     {
