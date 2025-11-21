@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TypingTrainer.Logic;
 
@@ -23,13 +18,13 @@ public class TypingFactory : ITypingFactory
         
         ITextProvider textProvider = config.Type  switch
         {
-            "usual" => ServiceProvider.GetRequiredService<TextFromTXTProvider>(),
+            Config.TypingType.Usual=> ServiceProvider.GetRequiredService<TextFromTXTProvider>(),
             _ => throw new NotImplementedException(),
         };
         IMistakeProcessor mistakeProcessor = config.Difficulty   switch
         {
-            "easy" =>  new SimpleMistakeProcessor(),
-            "hard" =>new AdvancedMistakeProcessor(),
+            Config.TypingDifficulty.Easy =>  new SimpleMistakeProcessor(),
+            Config.TypingDifficulty.Hard=> new AdvancedMistakeProcessor(),
             _ => throw new NotImplementedException(),
         };
 

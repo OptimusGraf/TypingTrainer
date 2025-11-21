@@ -94,10 +94,9 @@
     }
     void AnimateText(int lengthOfRedPart)
     {
-        //выбрасывается искл, когда неосталось текстов
+
         AnimatedText
             = $"<span class=\"correct\">{Typing.Text.Substring(0, Typing.Cursor)}</span>|<span class = \"incorrect\">{Typing.Text.Substring(Typing.Cursor, lengthOfRedPart)}</span>{Typing.Text.Substring(Typing.Cursor + lengthOfRedPart)}";
     }
 
 }
-@* <span class="correct">${char}</span>` *@

@@ -1,4 +1,6 @@
 ﻿@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
 <PageTitle>Home</PageTitle>
 
 <div id="container">
@@ -27,20 +29,28 @@
             <div class="setting">
                 <label "for="language">Язык:</label>
                 <select @bind="config.Language" id="language">
-                    <option value="ru">Русский</option>
-                    <option value="en">English</option>
+                    @foreach (Config.TypingLanguage l in Enum.GetValues(typeof(Config.TypingLanguage)))
+                    {
+                        <option value="@l">@GetEnumDisplayName(l)</option>
+                    }
+                    
                 </select>
             </div>
 
             <div class="setting">
                 <label for="type">Тип:</label>
                 <select @bind="config.Type" id ="type">
-                    <option value="usual">обычный</option>
+                    @foreach (Config.TypingType t in Enum.GetValues(typeof(Config.TypingType)))
+                    {
+                        <option value="@t">@GetEnumDisplayName(t)</option>
+                    }
                 </select>
                 <label for="difficulty">Сложность:</label>
                 <select @bind="config.Difficulty" id="difficulty">
-                    <option value="easy">Легко</option>
-                    <option value="hard">Сложно</option>
+                    @foreach (Config.TypingDifficulty d in Enum.GetValues(typeof(Config.TypingDifficulty)))
+                    {
+                        <option value="@d">@GetEnumDisplayName(d)</option>
+                    }
                 </select>
             </div>
         </div>
@@ -52,12 +62,8 @@
 {
     protected override void OnInitialized()
     {
-        config = new Config()
-        {
-            Language = "ru",
-            Type = "usual",
-            Difficulty = "easy"
-        };
+        config = new Config();
+
     }
    public Config config = new Config();
 
@@ -67,6 +73,11 @@
     {
         await OnStartTrainingCallback.InvokeAsync(config);
     }
-
+    string GetEnumDisplayName(Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var attr = field.GetCustomAttribute<DisplayAttribute>();
+        return attr?.Name ?? value.ToString();
+    }
 
 }
