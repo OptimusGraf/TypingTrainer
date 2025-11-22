@@ -1,30 +1,26 @@
 ﻿
 @rendermode InteractiveServer
 
-
-@{
-    // AnimatedText = Typing.Text;
-}
 <PageTitle>Тренажёр печати</PageTitle>
-
-
 
 <div id="container">
     <div id="title">Тренажёр печати</div>
 
     <div id="textToType">
-        @((MarkupString)AnimatedText)
+
+        <span class="correct">@Typing.Text.Substring(0, Typing.Cursor)</span><span class="cursor">|</span><span class="incorrect">@Typing.Text.Substring(Typing.Cursor, lengthOfRedPart)</span><span>@Typing.Text.Substring(Typing.Cursor + lengthOfRedPart) </span>
+       
     </div>
 
     <div id="inputField" class="typing-area" spellcheck="false" autocomplete="off" autocorrect="off" tabindex="0" @onkeydown="OnInput">
-        @((MarkupString)currentText)
+        @(currentText)
     </div>
 
    
     <div id="stats">
         <div>⏱ Время:   <span id="time">@Typing.Timer.Time.Seconds</span> сек</div>
         <div>⚡ Скорость: <span id="speed">@StatisticsInfo.CharacterPerMinute</span> зн/мин</div>
-        <div>⚡ Точность: <span id="accuracy">@($"{StatisticsInfo.Accuracy * 100:F0}")</span> %</div>
+        <div>⚡ Точность: <span id="accuracy">@($"{(int)(StatisticsInfo.Accuracy * 100)}")</span> %</div>
     </div>
     <button  @onclick="OnStopTrainingCallback">Меню</button>
     
@@ -80,23 +76,14 @@
             return;
         }
 
-        int lengthOfRedPart = 0;
         if (correct)
             lengthOfRedPart  = 0;
         else
             lengthOfRedPart = oldCursor - Typing.Cursor;
         currentText += e.Key[0];
 
-
-
-        AnimateText(lengthOfRedPart);
-
     }
-    void AnimateText(int lengthOfRedPart)
-    {
+    int lengthOfRedPart = 0;
 
-        AnimatedText
-            = $"<span class=\"correct\">{Typing.Text.Substring(0, Typing.Cursor)}</span>|<span class = \"incorrect\">{Typing.Text.Substring(Typing.Cursor, lengthOfRedPart)}</span>{Typing.Text.Substring(Typing.Cursor + lengthOfRedPart)}";
-    }
 
 }

@@ -166,3 +166,13 @@ button, #startBtn, #stopButton {
             border-color: #6ebaff;
             box-shadow: 0 0 6px rgba(110, 186, 255, 0.25);
         }
+.cursor {
+    display: inline-block;
+    width: 1px; /* толщина курсора */
+    background-color: #4da3ff; /* цвет — под тёмную тему */
+    animation: blink 1s step-end infinite;
+    vertical-align: bottom; /* чтобы стоял по базовой линии текста */
+    height: 1em; /* высота по размеру шрифта */
+    padding: 0; /* важно: никаких отступов */
+    margin: 0; /* важно: никаких пробелов вокруг */
+}
