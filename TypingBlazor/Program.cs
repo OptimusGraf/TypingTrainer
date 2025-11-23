@@ -1,11 +1,13 @@
 using System.Net.NetworkInformation;
 using TypingBlazor.Components;
 using TypingTrainer.Logic;
+using TypingBlazor.Client.Pages;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveWebAssemblyComponents();
+
 
 builder.Services.AddLogicServices();
 
@@ -21,11 +23,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.MapStaticAssets();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveWebAssemblyRenderMode()
+    .AddAdditionalAssemblies(typeof(TypingBlazor.Client._Imports).Assembly);
 
 app.Run();
-

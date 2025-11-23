@@ -1,17 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlazorClient\TypingBlazor.Client.csproj" />
     <ProjectReference Include="..\TypingLogic\TypingLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Components\" />
     <Folder Include="wwwroot\bootstrap\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0" />
   </ItemGroup>
 
 </Project>
