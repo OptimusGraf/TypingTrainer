@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypingBlazor", "TypingBlazo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypingBlazor.Client", "BlazorClient\TypingBlazor.Client.csproj", "{F1EFA3CB-8052-4B7B-8D47-3776A84E45A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shared", "shared\shared.csproj", "{809CCFB8-1F2B-4EE2-B597-52F5DEDC737C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{F1EFA3CB-8052-4B7B-8D47-3776A84E45A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1EFA3CB-8052-4B7B-8D47-3776A84E45A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1EFA3CB-8052-4B7B-8D47-3776A84E45A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{809CCFB8-1F2B-4EE2-B597-52F5DEDC737C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{809CCFB8-1F2B-4EE2-B597-52F5DEDC737C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{809CCFB8-1F2B-4EE2-B597-52F5DEDC737C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{809CCFB8-1F2B-4EE2-B597-52F5DEDC737C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

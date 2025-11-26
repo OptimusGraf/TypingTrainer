@@ -1,0 +1,169 @@
+﻿@using System.Threading.Tasks
+@rendermode InteractiveWebAssembly
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@implements IDisposable
+<PageTitle>Тренажёр печати</PageTitle>
+
+<div id="container">
+    <div id="title">Тренажёр печати</div>
+
+    <div id="textToType">
+
+        <span class="correct">@Typing.Text.Substring(0, Typing.Cursor)</span><span class="cursor">|</span><span class="incorrect">@Typing.Text.Substring(Typing.Cursor, lengthOfRedPart)</span><span>@Typing.Text.Substring(Typing.Cursor + lengthOfRedPart) </span>
+
+    </div>
+
+    <div id="inputField" class="typing-area" spellcheck="false" autocomplete="off" autocorrect="off" tabindex="0" @onkeydown="OnInput">
+        @(currentText)
+    </div>
+
+
+    <div id="stats">
+        <div>⏱ Время:   <span id="time">@Typing.Timer.Time.Seconds</span> сек</div>
+        <div>⚡ Скорость: <span id="speed">@StatisticsInfo.CharacterPerMinute</span> зн/мин</div>
+        <div>⚡ Точность: <span id="accuracy">@($"{(int)(StatisticsInfo.Accuracy * 100)}")</span> %</div>
+    </div>
+    <button @onclick="OnStopTrainingCallback">Меню</button>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback OnStopTrainingCallback { get; set; }
+    [Parameter]
+    public EventCallback OnFinishedCallback { get; set; }
+
+    [Parameter]
+    public ITyping Typing { get; set; }
+
+    public IStatisticsInfo StatisticsInfo;
+
+    private string AnimatedText = "";
+    private string currentText = "";
+    private System.Timers.Timer timerUpdateSec;
+    private System.Timers.Timer timerUpdateAccount;
+    private int seconds = 0;
+    protected override void OnInitialized()
+    {
+        StatisticsInfo = Typing.StatisticsProvider;
+        AnimatedText = Typing.Text;
+
+        timerUpdateSec = new System.Timers.Timer(100);
+        timerUpdateSec.Elapsed += (sender, e) =>
+        {
+            InvokeAsync(() =>
+            {
+
+                StateHasChanged();
+            });
+        };
+        timerUpdateSec.AutoReset = true;
+        timerUpdateSec.Start();
+
+    }
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var authstate = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            if (authstate.User.Identity.IsAuthenticated)
+            {
+
+                timerUpdateAccount = new System.Timers.Timer(5000);
+                timerUpdateAccount.Elapsed += (sender, e) =>
+                {
+                    InvokeAsync(async () =>
+                    {
+
+                        await UpdateStatisticAsync();
+
+                    });
+                };
+                timerUpdateAccount.AutoReset = true;
+                timerUpdateAccount.Start();
+            }
+        }
+    }
+
+    int lengthOfRedPart = 0;
+
+
+    private async Task OnInput(KeyboardEventArgs e)
+    {
+
+        if (string.IsNullOrEmpty(e.Key) || e.Key.Length != 1)
+            return;
+
+
+
+        int oldCursor = Typing.Cursor < Typing.Text.Length ? Typing.Cursor + 1 : Typing.Cursor;
+        bool correct = Typing.InputChar(e.Key[0]);
+
+        if (Typing.IsFinished)
+        {
+            await OnFinishedCallback.InvokeAsync();
+            return;
+        }
+
+        if (correct)
+            lengthOfRedPart = 0;
+        else
+            lengthOfRedPart = oldCursor - Typing.Cursor;
+        currentText += e.Key[0];
+
+    }
+
+    private int recorderTotalChar = 0;
+    private int recorderCorrectChar = 0;
+    UpdateStatsModel updateStats = new UpdateStatsModel();
+    private SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
+    async Task UpdateStatisticAsync()
+    {
+        await _lock.WaitAsync();
+
+
+        try
+        {
+            int currentTotalChar = StatisticsInfo.TotalChars;
+            int currentCorrectChar = StatisticsInfo.CorrectChars;
+            updateStats.TotalCharCount = currentTotalChar - recorderTotalChar;
+            updateStats.CorrectCharCount = currentCorrectChar - recorderCorrectChar;
+            updateStats.LastCharacterPerMinute = StatisticsInfo.CharacterPerMinute;
+            updateStats.LastAccuracy = StatisticsInfo.Accuracy;
+            updateStats.TimeTrainedInSeconds = StatisticsInfo.TimeForLastChar.TotalSeconds;
+
+
+            var responce = await Http.PostAsJsonAsync("api/account/updatestats", updateStats);
+
+            recorderTotalChar = currentTotalChar;
+            recorderCorrectChar = currentCorrectChar;
+        }
+        finally
+        {
+            _lock.Release();
+        }
+
+
+
+    }
+
+    public void Dispose()
+    {
+        if (timerUpdateAccount != null)
+        {
+            timerUpdateAccount.Stop();
+            timerUpdateAccount.Dispose();
+        }
+        if (timerUpdateSec != null)
+        {
+            timerUpdateSec.Stop();
+            timerUpdateSec.Dispose();
+        }
+    }
+
+}

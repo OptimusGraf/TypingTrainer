@@ -1,0 +1,60 @@
+﻿@rendermode InteractiveWebAssembly
+@inject HttpClient Http
+@page "/stats"
+<h3>statisticOfUser</h3>
+
+
+<section id="user-stats" aria-labelledby="stats-title" class="user-stats">
+    <header class="stats-header">
+        <div class="user-info">
+  
+
+            <div class="user-meta">
+                <h2 id="stats-title" class="user-name">@UserStats.UserName</h2>
+            </div>
+        </div>
+    </header>
+
+    <main class="stats-body" role="region" aria-labelledby="stats-title">
+        <div class="stats-grid" role="list">
+            <article class="stat-card" role="listitem" aria-label="Общее число символов">
+                <div class="stat-label">Всего символов</div>
+                <div id="total-chars" class="stat-value">@UserStats.TotalCharCount</div>
+            </article>
+
+            <article class="stat-card" role="listitem" aria-label="Точность">
+                <div class="stat-label">Точность</div>
+                <div id="accuracy" class="stat-value">@((int)(UserStats.Accuracy*100)) %</div>
+          
+            </article>
+
+         
+            <article class="stat-card" role="listitem" aria-label="Общее время тренировок">
+                <div class="stat-label">Общее время</div>
+                <div id="total-time" class="stat-value">@UserStats.TimeTrained.ToString(@"hh\:mm\:ss")</div>
+                <div class="stat-note">Часы:мин:сек</div>
+            </article>
+        </div>
+
+   
+    </main>
+
+
+</section>
+@code {
+
+    UserDto UserStats = new UserDto();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+       if (firstRender)
+        {
+            UserStats = await Http.GetFromJsonAsync<UserDto>("api/account/currentuser");
+            StateHasChanged();
+        }
+
+    }
+
+
+}

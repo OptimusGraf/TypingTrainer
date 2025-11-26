@@ -1,0 +1,150 @@
+﻿@inject HttpClient Http
+@rendermode InteractiveWebAssembly
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@using TypingBlazor.Client.Pages.Account
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+<PageTitle>Home</PageTitle>
+
+<div id="container">
+    <div class="top-bar">
+        <div class="logo">
+            <span>Typing Trainer</span>
+        </div>
+
+        <div class="user-actions">
+
+            <AuthorizeView>
+                <Authorized>
+                    <button class="user-btn" @onclick="LogOut">Выйти</button>
+                    <button class="user-btn" @onclick="GetStats">Статистика</button>
+                </Authorized>
+                <NotAuthorized>
+                    <button class="user-btn" @onclick="Login">Войти</button>
+                    <button class="user-btn" @onclick="Register">Зарегистрироваться</button>
+
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+
+    </div>
+    <section id="user-block">
+        <h1>Добро пожаловать!</h1>
+
+        <AuthorizeView>
+            <Authorized>
+
+                <div id="last-results">
+                    <h2>Ваш предыдущий результат</h2>
+
+                    <div class="result-line">
+                        <span>⚡ Скорость:</span>
+                        <strong id="lastSpeed">@currentUser.LastcharacterPerMinute</strong>
+                    </div>
+
+                    <div class="result-line">
+                        <span>🎯 Точность:</span>
+                        <strong id="lastAccuracy">@((int)(currentUser.LastAccuracy*100))%</strong>
+                    </div>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <p>Пожалуйста, войдите или зарегистрируйтесь, чтобы сохранять свои результаты и отслеживать прогресс.</p>
+            </NotAuthorized>
+        </AuthorizeView>
+
+
+        <div id="settings">
+            <h2>Настройки</h2>
+
+            <div class="setting">
+                <label "for=" language">Язык:</label>
+                <select @bind="config.Language" id="language">
+                    @foreach (Config.TypingLanguage l in Enum.GetValues(typeof(Config.TypingLanguage)))
+                    {
+                        <option value="@l">@GetEnumDisplayName(l)</option>
+                    }
+
+                </select>
+            </div>
+
+            <div class="setting">
+                <label for="type">Тип:</label>
+                <select @bind="config.Type" id="type">
+                    @foreach (Config.TypingType t in Enum.GetValues(typeof(Config.TypingType)))
+                    {
+                        <option value="@t">@GetEnumDisplayName(t)</option>
+                    }
+                </select>
+                <label for="difficulty">Сложность:</label>
+                <select @bind="config.Difficulty" id="difficulty">
+                    @foreach (Config.TypingDifficulty d in Enum.GetValues(typeof(Config.TypingDifficulty)))
+                    {
+                        <option value="@d">@GetEnumDisplayName(d)</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+    </section>
+    <button @onclick="StartTrainingButton">Начать тренировку</button>
+</div>
+@code
+{
+    UserDto currentUser = new UserDto();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var state = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = state.User;
+            if (user.Identity.IsAuthenticated)
+            {
+                currentUser = await Http.GetFromJsonAsync<UserDto>("api/account/currentuser");
+
+            }
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        config = new Config();
+
+    }
+    public Config config = new Config();
+
+    [Parameter]
+    public EventCallback<Config> OnStartTrainingCallback { get; set; }
+    public async Task StartTrainingButton()
+    {
+        await OnStartTrainingCallback.InvokeAsync(config);
+    }
+    string GetEnumDisplayName(Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var attr = field.GetCustomAttribute<DisplayAttribute>();
+        return attr?.Name ?? value.ToString();
+    }
+    void Login()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+    void Register()
+    {
+        NavigationManager.NavigateTo("/Register");
+    }
+    async Task LogOut()
+    {
+
+        await Http.PostAsync("api/account/logout", null);
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+    async Task GetStats()
+    {
+        NavigationManager.NavigateTo("/stats");
+    }
+
+}

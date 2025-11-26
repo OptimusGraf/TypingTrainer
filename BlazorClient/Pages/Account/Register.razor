@@ -1,0 +1,36 @@
+﻿@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@rendermode InteractiveWebAssembly
+@page "/register"   
+<section id="register-section">
+    <h2>Регистрация</h2>
+    <div class="form-group">
+        <label for="registerUsername">Имя пользователя:</label>
+        <input id="registerUsername" type="text" @bind="@registerModel.UserName" placeholder="Введите имя" />
+    </div>
+    <div class="form-group">
+        <label for="registerPassword">Пароль:</label>
+        <input id="registerPassword" type="password" @bind="registerModel.Password" placeholder="Введите пароль" />
+    </div>
+    <button class="auth-btn" @onclick="RegisterRequest">Зарегистрироваться</button>
+</section>
+
+@code {
+    RegisterModel registerModel = new RegisterModel();
+    async Task RegisterRequest()
+    {
+
+        var response = await Http.PostAsJsonAsync("api/account/register", registerModel);
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Registration failed: {errorMessage}");
+        }
+    }
+
+
+}

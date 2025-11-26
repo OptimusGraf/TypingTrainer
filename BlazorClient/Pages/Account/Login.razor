@@ -1,0 +1,39 @@
+﻿@inject HttpClient Http 
+@rendermode InteractiveWebAssembly
+@inject NavigationManager NavigationManager
+@page "/login"
+<div id="auth-container">
+    <h2>Войти</h2>
+    <div class="form-group">
+        <label for="loginName">Имя пользователя:</label>
+        <input id="loginName" type="name" @bind="loginModel.UserName" placeholder="Введите имя" />
+    </div>
+    <div class="form-group">
+        <label for="loginPassword">Пароль:</label>
+        <input id="loginPassword" type="password" @bind="loginModel.Password" placeholder="Введите пароль" />
+    </div>
+    <button class="auth-btn" @onclick="LoginRequest">Войти</button>
+
+</div>
+
+@code {
+    LoginModel loginModel = new();
+
+
+    async Task LoginRequest()
+    {
+        var response = await Http.PostAsJsonAsync("api/account/login", loginModel);
+
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            Console.WriteLine("Login failed");
+        }
+    }
+
+
+
+}
