@@ -1,8 +1,7 @@
 ﻿@rendermode InteractiveWebAssembly
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 @page "/stats"
-<h3>statisticOfUser</h3>
-
 
 <section id="user-stats" aria-labelledby="stats-title" class="user-stats">
     <header class="stats-header">
@@ -39,11 +38,17 @@
    
     </main>
 
+    <button class="auth-btn" @onclick="ToIndexPage">Назад</button>
 
 </section>
 @code {
 
     UserDto UserStats = new UserDto();
+
+    public void ToIndexPage()
+    {
+        NavigationManager.NavigateTo("/");
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
