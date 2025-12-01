@@ -8,22 +8,25 @@ using TypingBlazor.Components;
 using TypingTrainer.Logic;
 var builder = WebApplication.CreateBuilder(args);
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+if (builder.Environment.IsProduction())
+{
+    var port = Environment.GetEnvironmentVariable("PORT");
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddIdentity<TypingUser, IdentityRole>(options=>
+builder.Services.AddIdentity<TypingUser, IdentityRole>(options =>
 {
     options.User.RequireUniqueEmail = false;
-    options.Password.RequireDigit = false;        
-    options.Password.RequiredLength = 0;        
-    options.Password.RequireLowercase = false;       
-    options.Password.RequireUppercase = false;       
-    options.Password.RequireNonAlphanumeric = false; 
-    options.Password.RequiredUniqueChars = 0;       
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 0;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredUniqueChars = 0;
 
 
 })
