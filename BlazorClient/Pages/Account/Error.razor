@@ -1,0 +1,19 @@
+﻿<section id="error-section">
+    @if (IsError)
+    {
+            <div class="error-container">
+                <div class="error-icon">⚠️</div>
+                <p class="error-message">@ErrorMessage</p>
+            </div>
+    }
+</section>
+
+
+@code
+  {
+    [Parameter]
+    public bool IsError { get; set; }
+    [Parameter]
+    public string ErrorMessage { get; set; }
+
+}

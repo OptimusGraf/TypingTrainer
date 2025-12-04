@@ -14,9 +14,12 @@
     </div>
     <button class="auth-btn" @onclick="RegisterRequest">Зарегистрироваться</button>
 </section>
-
+<Error IsError="@isError" ErrorMessage="@errorMessage"/>
 @code {
     RegisterModel registerModel = new RegisterModel();
+    bool isError = false;
+    string errorMessage;
+
     async Task RegisterRequest()
     {
 
@@ -27,8 +30,12 @@
         }
         else
         {
-            var errorMessage = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Registration failed: {errorMessage}");
+
+            var res = await response.Content.ReadFromJsonAsync<List<IdentityError>>();
+            errorMessage = res?.LastOrDefault()?.Description;
+            isError = true;
+            StateHasChanged();
+
         }
     }
 

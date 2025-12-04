@@ -15,10 +15,11 @@
     <button class="auth-btn" @onclick="LoginRequest">Войти</button>
 
 </div>
-
+<Error IsError="@isError" ErrorMessage="@errorMessage"/>
 @code {
     LoginModel loginModel = new();
-
+    string errorMessage = "Invalid username or password.";
+    bool isError = false;
 
     async Task LoginRequest()
     {
@@ -30,7 +31,9 @@
         }
         else
         {
-            Console.WriteLine("Login failed");
+            
+            isError = true;
+            StateHasChanged();
         }
     }
 
