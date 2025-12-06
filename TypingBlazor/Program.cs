@@ -15,7 +15,7 @@ if (builder.Environment.IsProduction())
 
     var database = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-    builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(port));
+    builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(database));
 
 }
 else
