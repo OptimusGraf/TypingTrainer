@@ -12,11 +12,20 @@ if (builder.Environment.IsProduction())
 {
     var port = Environment.GetEnvironmentVariable("PORT");
     builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+    var database = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+    builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(port));
+
+}
+else
+{
+    builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 }
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
 
 builder.Services.AddIdentity<TypingUser, IdentityRole>(options =>
 {
